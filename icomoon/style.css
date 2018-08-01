@@ -1,0 +1,75 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?95c17l');
+  src:  url('fonts/icomoon.eot?95c17l#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?95c17l') format('truetype'),
+    url('fonts/icomoon.woff?95c17l') format('woff'),
+    url('fonts/icomoon.svg?95c17l#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-dot-single:before {
+  content: "\e903";
+}
+.icon-check:before {
+  content: "\e902";
+  color: green;
+    font-size: 25px;
+}
+.icon-smartphone:before {
+  content: "\e901";
+}
+.icon-moon:before {
+  content: "\e900";
+  color: green;
+    font-size: 25px;
+}
+.icon-folder:before {
+  content: "\e92f";
+}
+.icon-clock:before {
+  content: "\e94e";
+}
+.icon-clock2:before {
+  content: "\e94f";
+}
+.icon-display:before {
+  content: "\e956";
+}
+.icon-laptop:before {
+  content: "\e957";
+}
+.icon-mobile2:before {
+  content: "\e959";
+}
+.icon-user-check:before {
+  content: "\e975";
+}
+.icon-cloud:before {
+  content: "\e9c1";
+}
+.icon-plus:before {
+  content: "\ea0a";
+}
+.icon-circle-right:before {
+  content: "\ea42";
+}
+.icon-circle-left:before {
+  content: "\ea44";
+}

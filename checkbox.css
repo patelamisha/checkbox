@@ -1,0 +1,142 @@
+
+.container{
+    background-color: #69696961;
+    border: 1px solid black;
+}
+.navbar{
+    border-bottom: 1px solid black;
+}
+.main{
+    margin-top: 10px;
+    height: 35px;
+
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+  }
+
+  li {
+    float: left;
+    font-size: 17px;
+    padding: 0px;
+    font-family: sans-serif;
+  }
+
+  li a {
+    display: block;
+    padding: 8px;
+  }
+  .icon-circle-left {
+    margin-left: 7px;
+    font-size: 32px;
+    padding: 3px;
+  }
+
+.icon-circle-right  {
+  margin-left: auto;
+    font-size: 32px;
+    padding: 3px;
+  }
+
+  .inputfield {
+    margin-left: 115px;
+    margin-top: -29px;
+}
+  }
+  #filed{
+    background-image: url('img/search.png');
+    background-repeat: no-repeat;
+  }
+  
+.plus{
+  border: 2px solid black;
+  border-radius: 10px;
+  padding: 6px;
+
+}
+.left{
+  background-color: #4E4C4D;
+  width:95px;
+  height: 620px;
+  float: left;
+}
+.icon-cloud{
+  font-size: 50px;
+  padding: 16px;
+  color: #fff;
+}
+.icon-user-check{
+  font-size: 50px;
+  padding: 16px;
+  color: #fff;
+}
+.icon-clock{
+  font-size: 50px;
+  padding: 16px;
+  color: #fff;
+
+}
+.right{
+  margin:0px auto;
+  float:left;
+}
+.col-1{
+  padding: 25px;
+  width: 157px;
+  float: left;
+  
+}
+h2{
+  margin: 40px 0px 0px 0px;
+}
+.col-2{
+  padding-left: 25px;
+  width: 157px;
+  float: left;
+  padding-right: 25px;
+  padding-top: 25px;
+  margin-left: 276px
+}
+  .col-3{
+    padding-left: 25px;
+    width: 157px;
+    float: left;
+    padding-right: 25px;
+    padding-top: 25px;
+  }
+.icon-laptop {
+  font-size: 55px;
+  float: left;
+  text-align: center;
+}
+.icon-display {
+  font-size: 55px;
+    float: left;
+    text-align: center;
+}
+p{
+  font-size: 16px;
+  margin-top: 4px;
+}
+.col-4{
+  padding-left: 25px;
+  width: 157px;
+  float: left;
+  padding-right: 25px;
+  padding-top: 25px;
+}
+.icon-mobile2 {
+  font-size: 55px;   
+}
+hr{
+  clear: left;
+  margin-left: 10px;
+}
+.crea{
+  margin-top: -17px;
+  margin-left: 30px;
+}
