@@ -1,6 +1,6 @@
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import fontelloConfig from '../config.json';
-import { Dimensions } from "react-native";
+// import { Dimensions } from "react-native";
 import React from "react";
 import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
 import ProgressCircle from "react-native-progress-circle";
@@ -35,8 +35,8 @@ export default class Medication extends React.Component {
 
     //All variables in the id screen
     this.state = {
-      keycloakUser: props.route.params.userEmail,
-      userSub: "",
+      // keycloakUser: props.route.params.userEmail,
+      userSub: "87833c0f-7e7e-420b-b00f-fe6eea88b61a",
       fullName: "",
       lastTemp: 100,
       vaxStatus: "N/A",
@@ -114,30 +114,34 @@ export default class Medication extends React.Component {
   //fetching data from arangodb
   async componentDidMount() {
     //Getting current user
-    await this.currentUser()
-    let user_data = await fetchUserData(this.state.userSub)
-    console.log(user_data)
-    this.updateInputVal(user_data.FirstName + ' ' + user_data.LastName, 'fullName')
-    console.log(this.state.fullName)
+    // await this.currentUser()
+    // let user_data = await fetchUserData(this.state.userSub)
+    // //console.log(user_data)
+    // this.updateInputVal(user_data.FirstName + ' ' + user_data.LastName, 'fullName')
+    //console.log(this.state.fullName)
     // console.log(user_data)
 
     /* Commented out this section to avoid issues with the ArangoDB/API instance being down.
         Uncomment when the team has the DB up and running again */
 
     // //Call apis to get information to populate the pages
-    // let data_meds = await fetchUserMedication(this.state.userSub)
-    // let data_vax = await fetchUserVax(this.state.userSub)
-    // let covid_data = await fetchCovidInfo(this.state.userSub)
+    let data_meds = await fetchUserMedication(this.state.userSub)
+    let data_vax = await fetchUserVax(this.state.userSub)
+    let covid_data = await fetchCovidInfo(this.state.userSub)
+    let data_obs = await fetchUserObs(this.state.userSub)
     // let claim_data = await fetchUserClaim(this.state.userSub)
 
-    // //Saving data from apis
-    // this.setState({
-    // medicationList: data_meds,
-    // vaccineList: data_vax.entry,
-    // dose1: covid_data.coding[1].occurrenceDateTime.substring(0,10),
-    // dose2: covid_data.coding[1].occurrenceDateTime.substring(0,10)
-    // })
-
+    //Saving data from apis
+    await this.setState({
+      medicationList: data_meds,
+      vaccineList: data_vax.entry,
+      observationInfo: data_obs.entry,
+      dose1: covid_data.coding[1].occurrenceDateTime.substring(0, 10),
+      dose2: covid_data.coding[1].occurrenceDateTime.substring(0, 10)
+    })
+    //console.log(this.state.vaccineList)
+    //console.log(covid_data.coding)
+    console.log(this.state.vaccineList)
     //Data has been fetched. Remove loading screen
     this.setState({
       isLoading: false,
@@ -212,35 +216,47 @@ export default class Medication extends React.Component {
     }
   };
 
-  observationInfo = (uid) => {
-    if (uid == null) {
+  observationInfo = (vax) => {
+    if (vax == null) {
       return (
         <View style={{ flexDirection: "row", justifyContent: "center" }}>
-          <Text style={{ fontSize: 18 }}>Not Available</Text>
+          <Text style={{ fontSize: 18 }}> Not Available </Text>
         </View>
       );
     } else {
-      return uid.map((item) => {
+      return vax.map((item) => {
         return (
           <View
-            key={item.patient._key}
-            style={{ flexDirection: "row", justifyContent: "center" }}
+            key={item.resource.id}
+            style={{ flexDirection: "row", justifyContent: "flex-start" }}
           >
-            <View style={{ flexDirection: "column", width: "80%" }}>
-              <Text style={styles.textStyleTitle}>{item.patient.name}</Text>
-              <Text style={styles.textStyleSub}>{item.patient.name}</Text>
+            <View style={{ flexDirection: "column", width: "60%" }}>
+              <Text style={styles.textStyleTitle}>
+                {item.resource.code.text}
+              </Text>
             </View>
 
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "flex-end",
-                width: "20%",
+                width: "40%",
                 paddingRight: 10,
               }}
             >
               <View style={{ flexDirection: "column", width: "100%" }}>
-                <Text style={styles.textStyleR}>{item.patient.name}</Text>
+                <Text style={styles.textStyleTitle}>
+                  {/* {item.resource.valueQuantity.value
+                    +
+                    item.resource.valueQuantity.unit} */}
+                </Text>
+                <Text style={[styles.textStyleR, { marginTop: 5 }]}>
+                  {(
+                    item.resource.effectiveDateTime.substring(5, 10) +
+                    "/" +
+                    item.resource.effectiveDateTime.substring(0, 4)
+                  ).replace("-", "/")}
+                </Text>
               </View>
             </View>
           </View>
@@ -339,7 +355,7 @@ export default class Medication extends React.Component {
     const Medical = createIconSetFromFontello(fontelloConfig);
     return (
       <View style={styles.container}>
-        <View style={styles.mainBackground}>
+        <View style={styles.headerBackground}>
           <LinearGradient colors={['#00001a', '#000066', '#000099', '#0000cc']} style={styles.linearGradient}>
             <Text
               style={{
@@ -378,11 +394,11 @@ export default class Medication extends React.Component {
           </TouchableOpacity>
         </View>
 
-        {/* <View style={styles.vaxStatusCard}>
+        {/*<View style={styles.vaxStatusCard}>
           <Text
             style={[styles.textStyleSub, { paddingBottom: 7 }]}
-            //MAKE THIS ELEMENT TOUCHABLE
-            //DISPLAY COVID VACCINE TYPE (pfizer, moderna ...)
+          //MAKE THIS ELEMENT TOUCHABLE
+          //DISPLAY COVID VACCINE TYPE (pfizer, moderna ...)
           >
             Covid Vaccination Status
           </Text>
@@ -394,8 +410,8 @@ export default class Medication extends React.Component {
             </View>
             <View
               style={{ flexDirection: "column", padding: 10 }}
-              //DOSAGE INFO - CURRENTLY DISPLAYS SAME DATE FOR BOTH DOSES
-              //WILL BE CHANGED WHEN DOSAGE INFO IS UPDATED IN THE JSON REQUEST
+            //DOSAGE INFO - CURRENTLY DISPLAYS SAME DATE FOR BOTH DOSES
+            //WILL BE CHANGED WHEN DOSAGE INFO IS UPDATED IN THE JSON REQUEST
             >
               <View style={{ flexDirection: "row" }}>
                 <View
@@ -433,7 +449,7 @@ export default class Medication extends React.Component {
               </View>
             </View>
           </View>
-        </View> */}
+        </View>*/}
         {this.state.fetchUserObs && ( //DISPLAYS MEDICATION DATA
           <View style={styles.dataCard}>
             <ScrollView>
@@ -590,9 +606,8 @@ export default class Medication extends React.Component {
           </View>
         )}
 
-        {/* <View  style={[styles.bottomContainer]}> */}
-        <ScrollView stickyHeaderIndices={[1]} style={styles.scrollcontainer}>
-          <View style={styles.containerx}>
+        <ScrollView style={styles.scrollcontainer}>
+         <View style={styles.containerx}>
             <View style={styles.box}>
               <TouchableOpacity
                 //style={[styles.wrapper]}
@@ -611,11 +626,10 @@ export default class Medication extends React.Component {
                     fontWeight: "bold",
                     alignSelf: "center",
                     textAlign: "center"
-                  }}>Vaccinations</Text>
+                  }}>Vaccination</Text>
                 </View>
               </TouchableOpacity>
             </View>
-
             <View style={styles.box}>
               <TouchableOpacity
                 //style={[styles.wrapper]}
@@ -846,7 +860,6 @@ export default class Medication extends React.Component {
                 </View>
               </TouchableOpacity>
             </View>
-
           </View>
         </ScrollView>
       </View>
@@ -855,30 +868,27 @@ export default class Medication extends React.Component {
   }
 }
 
-
 const styles = StyleSheet.create({
-  scrollcontainer: {
-    flex: 1,
-
-  },
   containerx: {
     flex: 1,
+    justifyContent:'center',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    top: '14%',
-    marginLeft: '3.1%',
-    marginBottom: '5%',
+    width:'100%',
+    overflow:'scroll',
+    height:"100%" ,
+    marginTop:100
   },
   box: {
     margin: 5,
-    width: Dimensions.get('window').width / 2 - 6,
     justifyContent: 'center',
     backgroundColor: '#ebebe0',
-    //  marginBottom: 5,
-    width: 185,
-    height: 170,
+     marginBottom: 5,
+    width: "46.9%",
+    height: 180,
     borderRadius: 10,
-    shadowColor: "#e6e600",
+    borderColor: "#d6d6d6",
+    shadowColor: "#b3c6ff",
     shadowOffset: {
       width: 0,
       height: 1,
@@ -886,48 +896,38 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 10,
-
-
   },
   container: {
     flex: 1,
     display: "flex",
-    justifyContent: "center",
+    justifyContent:'center',
     alignItems: "center",
     padding: 0,
   },
-  mainBackground: {
-    justifyContent: "center",
+  scrollcontainer: {
+    flex: 1,
+  },
+  headerBackground: {
+    justifyContent: "space-between",
     position: "absolute",
     top: 0,
     width: "100%",
-    backgroundColor: "#5F9EA0",
     zIndex: 2,
-
-  },
-  subBackground: {
-    paddingTop: 10,
-    paddingBottom: 50,
-    width: "80%",
-    height: "60%",
-    marginTop: "5%",
-    // backgroundColor: "white",
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: "#d6d6d6",
   },
   dataCard: {
+    justifyContent:'flex-start',
+    alignContent:'flex-start',
     paddingTop: 20,
-    // position:"absolute",
-    width: "80%",
+    width: "90%",
     height: "50%",
-    marginTop: "25%",
-    backgroundColor: '#f5f5f0',
+    // margin: "10%",
+    marginTop:120,
+    backgroundColor: '#ebebe0',
     borderRadius: 30,
     borderWidth: 1,
     borderColor: "#d6d6d6",
-    // paddingBottom: 50,
-    shadowColor: "#f5f5f0",
+    paddingBottom: 50,
+    shadowColor: "#b3c6ff",
     shadowOffset: {
       width: 0,
       height: 1,
@@ -974,24 +974,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     width: 100,
   },
-  // bottomContainer: {
-  //   flex: 1,
-  //   display: "flex",
-  //   flexDirection:"row",
-  //   justifyContent :"space-around",
-  //   alignItems:"stretch",
-  //   flexGrow:2,
-  //   height:"100%",
-
-  // },
-  navigationContainer: {
-    justifyContent: "space-around",
-    alignItems: 'center',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    // height:"10%",
-  },
-
   backlocation: {
     position: "absolute",
     top: "4%",
@@ -1018,29 +1000,5 @@ const styles = StyleSheet.create({
     color: "#505050",
     marginTop: 20,
   },
-  // wrapper: {
-  //   // flex: 1,
-  //   alignItems: "center",
-  //   justifyContent: "space-around",
-  //   height: 190,
-  //   top: '8%',
-  //   backgroundColor: '#f5f5f0',
-  //   marginBottom: 5,
-  //   width: 190,
-  //   // borderColor:"#b3c6ff",
-  //   borderRadius: 10,
-  //   shadowColor: "#f5f5f0",
-  //   shadowOffset: {
-  //     width: 0,
-  //     height: 1,
-  //   },
-  //   shadowOpacity: 0.25,
-  //   shadowRadius: 3.84,
-  //   elevation: 10,
-  // },
-  // patinetMedicalList:{
-  //   color:"black",
-  //   fontWeight:900,
-  //   fontSize:"50",
-  //
+
 });
