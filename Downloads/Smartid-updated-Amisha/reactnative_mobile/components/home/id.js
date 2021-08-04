@@ -3,8 +3,12 @@ import { StyleSheet, View, Text, ActivityIndicator, ScrollView } from 'react-nat
 import { Auth } from 'aws-amplify';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { fetchUserData, searchuserBackend } from '../database/datafetch'
-
+import { fetchUserData, searchuserBackend, fetchUserCertificate } from '../database/datafetch'
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from "react-native-responsive-dimensions";
 
 export default class Id extends React.Component {
 
@@ -43,28 +47,28 @@ export default class Id extends React.Component {
     //Getting current user
     await this.currentUser()
     let user_data = await fetchUserData(this.state.userSub)
-    console.log(user_data)
+    //console.log(user_data)
     this.updateInputVal(user_data.FirstName + ' ' + user_data.LastName, 'fullName')
-    console.log(this.state.fullName)
+    //console.log(this.state.fullName)
 
     /* Commented out this section to avoid issues with the ArangoDB/API instance being down. 
     Uncomment when the team has the DB up and running again */
 
-    // //fetching the data
-    // let data = await fetchUserData(this.state.userSub)
+    //fetching the data
+    let data = await fetchUserData(this.state.userSub)
 
-    // //fill in data components here
-    // this.updateInputVal(data.FirstName + ' ' + data.LastName, 'fullName')
-    // this.updateInputVal(data.dateofBirth, 'dateofBirth')
-    // this.updateInputVal(data.smartID, 'smartID')
+    //fill in data components here
+    this.updateInputVal(data.FirstName + ' ' + data.LastName, 'fullName')
+    this.updateInputVal(data.dateofBirth, 'dateofBirth')
+    this.updateInputVal(data.smartID, 'smartID')
 
 
-    // let data_certificates = await fetchUserCertificate(this.state.userSub)
+    let data_certificates = await fetchUserCertificate(this.state.userSub)
 
-    // //SAVING CERTIFICATIONS
-    // this.setState({
-    //   certificiateList: data_certificates
-    // })
+    //SAVING CERTIFICATIONS
+    this.setState({
+      certificiateList: data_certificates
+    })
 
     //Data has been fetched. Remove loading screen
     this.setState({
@@ -290,7 +294,7 @@ export default class Id extends React.Component {
   }
 }
 
-
+//Change every integer to percentage below to achieve responsive
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -348,49 +352,48 @@ const styles = StyleSheet.create({
     borderBottomEndRadius: 20,
   },
   textStyleR: {
-    fontSize: 12,
+    fontSize: responsiveFontSize(1.7),
     color: '#fff',
-    marginBottom: 20,
-    marginStart: 60,
-    marginEnd: 40
+    marginBottom: "6%",
+    marginStart: "6%",
+    marginEnd: "6%",
   },
   textStyleRtitle: {
-    fontSize: 12,
-    marginEnd: 60,
-    marginStart: 60,
+    fontSize: responsiveFontSize(1.8),
+    marginEnd: "2%",
+    marginStart: "6%",
     color: '#bababa',
   },
   textStyleC: {
-    fontSize: 12,
+    fontSize: responsiveFontSize(2.0),
     color: '#505050',
-    marginTop: 5,
-    marginBottom: 10,
-    marginStart: 30,
-    marginEnd: 40
+    marginBottom: "6%",
+    marginStart: "6%",
+    marginEnd: "6%",
   },
   textStyleCtitle: {
     fontSize: 15,
-    marginStart: 30,
-    marginEnd: 50,
-    marginTop: 15,
+    marginBottom: "6%",
+    marginStart: "6%",
+    marginEnd: "6%",
     width: 105,
     color: '#000',
   },
   textStyleDate: {
-    fontSize: 12,
+    fontSize: responsiveFontSize(2.0),
     color: '#505050',
     marginTop: 20,
     marginEnd: 20
   },
   textStyleName: {
-    fontSize: 36,
+    fontSize: responsiveFontSize(5.0),
     color: '#fff',
     marginBottom: 5,
     fontWeight: 'bold',
     alignSelf: "center",
   },
   textStyleID: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(2.0),
     color: '#f5bd1f',
     marginBottom: 20,
     alignSelf: "center",
